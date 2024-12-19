@@ -8,6 +8,10 @@ class SketchPad{
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         `
         container.appendChild(this.canvas);
+        this.undoButton = document.createElement('button');
+        this.undoButton.innerText = 'Undo';
+        container.appendChild(this.undoButton);
+
         this.ctx = this.canvas.getContext('2d');
 
         // Private method
@@ -33,6 +37,11 @@ class SketchPad{
         }
         this.canvas.onmouseup = (e) => {          
             this.isDrawing = false;
+        }
+        
+        this.undoButton.onclick = (e) => {
+            this.path.pop();
+            this.#redraw();
         }
     }
 
