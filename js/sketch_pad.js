@@ -19,11 +19,13 @@ class SketchPad{
 
         this.path = [];
         this.isDrawing = false;
+        this.#toggleUndoButton();
     }
     #addEventListeners(){
         // only when mouse is in the canvas
         this.canvas.onmousedown = (e) => {
             this.path.push([this.#getMousePosition(e)]);
+            this.#toggleUndoButton();
             this.#redraw();
             this.isDrawing = true;
         }
@@ -40,7 +42,9 @@ class SketchPad{
         }
         
         this.undoButton.onclick = (e) => {
+            // NOTE(shunxian): should we allow pop from empty array?
             this.path.pop();
+            this.#toggleUndoButton();
             this.#redraw();
         }
     }
@@ -48,6 +52,10 @@ class SketchPad{
     #getMousePosition(e){
         const rect = this.canvas.getBoundingClientRect();
         return [Math.round(e.clientX - rect.left), Math.round(e.clientY - rect.top)];
+    }
+
+    #toggleUndoButton(){
+        this.undoButton.disabled = this.path.length == 0;
     }
 
     #redraw(){
