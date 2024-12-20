@@ -17,10 +17,16 @@ class SketchPad{
         // Private method
         this.#addEventListeners();
 
+        this.reset();
+    }
+
+    reset(){
         this.path = [];
         this.isDrawing = false;
         this.#toggleUndoButton();
+        this.#redraw();
     }
+
     #addEventListeners(){
         // only when mouse is in the canvas
         this.canvas.onmousedown = (e) => {

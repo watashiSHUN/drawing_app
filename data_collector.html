@@ -3,15 +3,80 @@
     <head>
         <title>Data Collector</title>
         <link rel="stylesheet" type="text/css" href="style.css">
+        <meta charset="utf-8">
     </head>
     <body>
         <div id="content">
             <h1>Data Collector</h1>
+            <div>
+                <input id = "author" type="text" placeholder="Type Your Name">
+                <span id="drawing_instructions"></span>
+                <button id = "continue_button" onclick="startCollecting()">START</button>
+            </div>
             <br>
-            <div id="drawing_area"> </div>
+            <div id="drawing_area" style="visibility:hidden;"> </div>
         </div>
         <script src="js/sketch_pad.js"></script>
         <script>
+            var objectIndex = 0;
+            const objects = ["car", "fish", "house", "tree", "bicycle", "guitar", "pencil","clock"];
+            const data = {
+                author: null,
+                session_id: new Date().getTime(), // UID
+                drawings:{}
+            };
+
             var sketchPad = new SketchPad(/*container division=*/drawing_area);
+            
+            function startCollecting(){
+                // TODO(shunxian): how come I can access `author` here without using `document.getElementById`?
+                // https://stackoverflow.com/questions/3434278/do-dom-tree-elements-with-ids-become-global-properties
+                if (author.value == ""){
+                    alert("Please type your name");
+                    return;
+                }
+                data.author = author.value;
+                author.style.display = "none"; // no longer need author name input
+                drawing_area.style.visibility = "visible";
+                // Display next object
+                nextObject = objects[objectIndex]; // Display the first object
+                drawing_instructions.innerHTML = "Draw a " + nextObject;
+                continue_button.innerHTML = "NEXT";
+                continue_button.onclick = draw_next;
+            }
+
+            function draw_next(){
+                // Save the drawing
+                if (sketchPad.path.length == 0){
+                    alert("Please draw something");
+                    return;
+                }
+                data.drawings[objects[objectIndex]] = sketchPad.path;
+                sketchPad.reset();
+
+                if (objectIndex+1 < objects.length){
+                    drawing_instructions.innerHTML = "Draw a " + objects[++objectIndex];
+                } else {
+                    // Finished drawing all objects
+                    drawing_area.style.visibility = "hidden";
+                    drawing_instructions.innerHTML = "Thank you for your drawings!";
+                    continue_button.innerHTML = "SAVE";
+                    continue_button.onclick = save_data;
+                }
+            }
+
+            function save_data(){
+                continue_button.style.display = "none";
+                // <a>, anchor element
+                const element = document.createElement('a');
+                // hyper link to a file
+                element.setAttribute('href', 
+                    'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(data)));
+
+                const fileName = data.author+"_"+data.session+".json";
+                // `download` attribute specifies that the target will be downloaded when a user clicks on the hyperlink
+                element.setAttribute('download', fileName);
+                element.click(); // trigger the download
+            }
         </script>
 </html>
