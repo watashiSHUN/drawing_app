@@ -1,6 +1,5 @@
-# data
-*.json
-*.png
+# our data
+data/
 
 # Logs
 logs

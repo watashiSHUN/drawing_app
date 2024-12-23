@@ -57,6 +57,10 @@ file_names.forEach(file_name => {
 // Write metadata
 fs.writeFileSync(constants.JSON_DIR + "/metadata.json", JSON.stringify(metadata));
 
+// load matedata.json into the webapp via a hack
+fs.writeFileSync(constants.JSON_DIR + "/metadata.js", "const metadata = " + JSON.stringify(metadata)) + ";";
+
+// TODO(shunxian): the alternative is to draw everything on the fly, in the data viewer
 function generateImage(paths, output_file){
     drawPath(ctx, paths);
 
