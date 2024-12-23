@@ -16,10 +16,12 @@
             <br>
             <div id="drawing_area" style="visibility:hidden;"> </div>
         </div>
-        <script src="js/sketch_pad.js"></script>
+        <script src="../common/draw_module.js"></script>
+        <script src="sketch_pad.js"></script>
         <script>
             var objectIndex = 0;
             const objects = ["car", "fish", "house", "tree", "bicycle", "guitar", "pencil","clock"];
+            // TODO(shunxian): refactor this into a class
             const data = {
                 author: null,
                 session_id: new Date().getTime(), // UID
@@ -29,7 +31,7 @@
             var sketchPad = new SketchPad(/*container division=*/drawing_area);
             
             function startCollecting(){
-                // TODO(shunxian): how come I can access `author` here without using `document.getElementById`?
+                // NOTE(shunxian): how come I can access `author` here without using `document.getElementById`?
                 // https://stackoverflow.com/questions/3434278/do-dom-tree-elements-with-ids-become-global-properties
                 if (author.value == ""){
                     alert("Please type your name");

@@ -1,3 +1,5 @@
+// import { drawPath } from '../common/draw_module.js';
+
 class SketchPad{
     constructor(container, size=400){
         this.canvas = document.createElement('canvas'); // HTML5 canvas element
@@ -65,19 +67,7 @@ class SketchPad{
     }
 
     #redraw(){
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.lineWidth = 3;
-        this.ctx.lineCap = 'round';
-        this.ctx.lineJoin = 'round';
-        for (let i = 0; i < this.path.length; i++){
-            this.ctx.beginPath();
-            const line = this.path[i]; // [[x1,y1], [x2,y2], ...]
-            this.ctx.moveTo(...line[0]);
-            for (let j = 1; j < line.length; j++){
-                this.ctx.lineTo(...line[j]);
-            }
-            this.ctx.stroke();
-        }
-        // TODO(shunxian): reset the canvas context?
+        // Imported via <script> tag in html
+        drawPath(this.ctx, this.path);
     }
 }
