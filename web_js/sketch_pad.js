@@ -1,7 +1,7 @@
 // import { drawPath } from '../common/draw_module.js';
 
 class SketchPad{
-    constructor(container, size=400){
+    constructor(/*drawing_area=*/container, size=400){
         this.canvas = document.createElement('canvas'); // HTML5 canvas element
         this.canvas.width = size;
         this.canvas.height = size;
@@ -10,9 +10,11 @@ class SketchPad{
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         `
         container.appendChild(this.canvas);
+        const new_div = document.createElement('div');
+        container.appendChild(new_div);
         this.undoButton = document.createElement('button');
-        this.undoButton.innerText = 'Undo';
-        container.appendChild(this.undoButton);
+        this.undoButton.innerText = 'UNDO';
+        new_div.appendChild(this.undoButton);
 
         this.ctx = this.canvas.getContext('2d');
 
