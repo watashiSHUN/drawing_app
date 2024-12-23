@@ -9,6 +9,7 @@
 
 // NOTE(shunxian): commonJs import
 const constants = require('../common/constants_module.js');
+const utils = require('../common/utils_module.js');
 const fs = require('fs');
 // Named import
 // NOTE(shunxian): destructing assignment, unpack array/objects
@@ -46,6 +47,9 @@ file_names.forEach(file_name => {
         // Save the image representation of the drawing
         generateImage(paths, constants.IMG_DIR + "/" + id + ".png");
 
+        // 8 drawings per file/student
+        utils.printProgress(id+1, file_names.length*8);
+        
         id++;
     }
 });
