@@ -6,15 +6,9 @@
 // 2.1) normalized.json => [[x1, y1], [x2, y2], ...] 1 object under id.json
 // 3) normalized.png => drawing
 
-const constants = {};
 
-constants.DATA_DIR = "../data";
-constants.RAW_DIR = constants.DATA_DIR + "/raw";
-constants.DATASET_DIR = constants.DATA_DIR + "/dataset";
-constants.JSON_DIR = constants.DATASET_DIR + "/json";
-constants.IMG_DIR = constants.DATASET_DIR + "/img";
-
-// NOTE(shunxian): commonJs
+// NOTE(shunxian): commonJs import
+const constants = require('../common/constants_module.js');
 const fs = require('fs');
 // Named import
 // NOTE(shunxian): destructing assignment, unpack array/objects
@@ -48,7 +42,7 @@ file_names.forEach(file_name => {
         // Extract the actual drawing
         const paths = drawings[drawing];
         // Save the numerical representation of the drawing
-        fs.writeFileSync(constants.JSON_DIR + "/" + id + ".json", JSON.stringify(drawings[paths]));
+        fs.writeFileSync(constants.JSON_DIR + "/" + id + ".json", JSON.stringify(paths));
         // Save the image representation of the drawing
         generateImage(paths, constants.IMG_DIR + "/" + id + ".png");
 
