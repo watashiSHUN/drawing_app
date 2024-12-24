@@ -11,8 +11,21 @@
         <script src="../data/dataset/json/metadata.js"></script>
         <script src="../common/constants_module.js"></script>
         <script src="../common/utils_module.js"></script>
+        <script src="display_table.js"></script>
 
         <script>
-            console.log("metadata", metadata);
+            // NOTE: variable `metadata` is available when we load metadata.js
+            const student_drawings = utils.groupByKey(metadata, "student_id");
+            
+            let row_count = 0;
+            for (let student_id in student_drawings){
+                const drawing_metadatas = student_drawings[student_id];
+                const student_name = drawing_metadatas[0].student_name;
+                createRow(/*div=*/container, student_name, drawing_metadatas);
+                row_count++;
+                if (row_count >= 50){
+                    break;
+                }
+            }
         </script>
     </body>

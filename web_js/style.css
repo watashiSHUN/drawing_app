@@ -27,3 +27,28 @@ button:disabled:hover{
     background-color: lightgray;
     cursor: not-allowed;
 }
+
+.row{
+    display: flex;
+    align-items: center;
+}
+
+.thumbnail{
+    width: 100%;
+}
+
+.first_col{
+    flex: 2 1 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.image_container{
+    flex: 1 1 0;
+    background-color: white;
+    text-align: center;
+    border-radius: 10%;
+    margin: 10px;
+    overflow: hidden;
+}
