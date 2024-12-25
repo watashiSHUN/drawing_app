@@ -23,6 +23,12 @@ utils.groupByKey = (array, key) => {
     return return_value;
 };
 
+// INPUT: json object
+// OUTPUT: "variable_name = json_object" as string
+utils.jsonToVariable = (json_object, varaible_name) => {
+    return `const ${varaible_name} = ${JSON.stringify(json_object)};`;
+};
+
 if (typeof module !== 'undefined'){
     module.exports = utils;
 }

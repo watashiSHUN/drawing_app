@@ -8,14 +8,15 @@
     <body>
         <h1>Data Viewer</h1>
         <div id="container"></div>
-        <script src="../data/dataset/json/metadata.js"></script>
+        <script src="../data/dataset/js/features.js"></script>
         <script src="../common/constants_module.js"></script>
         <script src="../common/utils_module.js"></script>
         <script src="display_table.js"></script>
 
         <script>
+            const {metadatas, feature_names} = features;
             // NOTE: variable `metadata` is available when we load metadata.js
-            const student_drawings = utils.groupByKey(metadata, "student_id");
+            const student_drawings = utils.groupByKey(metadatas, "student_id");
             
             let row_count = 0;
             for (let student_id in student_drawings){
