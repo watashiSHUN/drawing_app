@@ -16,6 +16,7 @@
             <br>
             <div id="drawing_area" style="visibility:hidden;"></div>
         </div>
+        <script src="../common/constants_module.js"></script>
         <script src="../common/draw_module.js"></script>
         <script src="sketch_pad.js"></script>
         <script>
@@ -28,7 +29,7 @@
                 drawings:{}
             };
 
-            var sketchPad = new SketchPad(/*container division=*/drawing_area);
+            var sketchPad = new SketchPad(/*container division=*/drawing_area, constants.CANVAS_SIZE);
             
             function startCollecting(){
                 // NOTE(shunxian): how come I can access `author` here without using `document.getElementById`?
