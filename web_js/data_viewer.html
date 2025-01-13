@@ -7,11 +7,19 @@
     </head>
     <body>
         <h1>Data Viewer</h1>
+        <div id="chart_container"></div><!--refactor chart to be its own html page -->
         <div id="container"></div>
         <script src="../data/dataset/js/features.js"></script>
         <script src="../common/constants_module.js"></script>
         <script src="../common/utils_module.js"></script>
         <script src="display_table.js"></script>
+        <script src="../github/chart.js"></script>
+        <script src="../github/graphics.js"></script>
+        <script src="../github/math.js"></script>
+        <!-- if we were to use google chart library:
+        <script src="https://www.gstatic.com/charts/loader.js"></script>
+        <script src="display_chart.js"></script> 
+        -->
 
         <script>
             const {metadatas, feature_names} = features;
@@ -28,5 +36,30 @@
                     break;
                 }
             }
+            const style = {
+                    car: {color: "red", text: "🚗"},
+                    fish: {color: "blue", text: "🐟"},
+                    house: {color: "green", text: "🏠"},
+                    tree: {color: "purple", text: "🌳"},
+                    bicycle: {color: "orange", text: "🚴"},
+                    guitar: {color: "brown", text: "🎸"},
+                    pencil: {color: "black", text: "📝"},
+                    clock: {color: "gray", text: "⏰"}
+                };
+
+            const options = {
+                size: constants.CANVAS_SIZE*3,
+                axesLabels: feature_names,
+                styles: style,
+                transparency: 0.6,
+                icon: "image",
+                // TODO(shunxian): when we click on the item, 
+                // it should highlight and display the drawing
+            };
+
+            graphics.generateImages(style);
+
+            
+            const chart = new Chart(chart_container, metadatas, options);
         </script>
     </body>
