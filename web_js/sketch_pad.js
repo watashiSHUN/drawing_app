@@ -1,7 +1,12 @@
 // import { drawPath } from '../common/draw_module.js';
 
 class SketchPad {
-  constructor(/*drawing_area=*/ container, size) {
+  constructor(
+    /*drawing_area=*/ container,
+    size,
+    /*callback=*/ on_redraw = null
+  ) {
+    this.on_redraw = on_redraw;
     this.canvas = document.createElement("canvas"); // HTML5 canvas element
     this.canvas.width = size;
     this.canvas.height = size;
@@ -74,5 +79,8 @@ class SketchPad {
   #redraw() {
     // Imported via <script> tag in html
     drawPath(this.ctx, this.path);
+    if (this.on_redraw) {
+      this.on_redraw(this.path);
+    }
   }
 }

@@ -7,15 +7,29 @@
     </head>
     <body>
         <h1>Data Viewer</h1>
+        <div id="input_container">
+            <div id="classification"></div>
+        </div>
         <div id="chart_container"></div><!--refactor chart to be its own html page -->
         <div id="container"></div>
+        <!-- data -->
         <script src="../data/dataset/js/features.js"></script>
+
+        <!-- common code -->
         <script src="../common/constants_module.js"></script>
         <script src="../common/utils_module.js"></script>
+        <script src="../common/draw_module.js"></script>
+        <script src="../common/features_module.js"></script>
+
+        <!-- drawing sketchpad(same sketchpad as the one we used in "data_collector.html") -->
+        <script src="sketch_pad.js"></script>
+        
+        <!-- display chart -->
         <script src="display_table.js"></script>
         <script src="../github/chart.js"></script>
         <script src="../github/graphics.js"></script>
         <script src="../github/math.js"></script>
+        
         <!-- if we were to use google chart library:
         <script src="https://www.gstatic.com/charts/loader.js"></script>
         <script src="display_chart.js"></script> 
@@ -59,7 +73,21 @@
 
             graphics.generateImages(style);
 
-            
             const chart = new Chart(chart_container, metadatas, options);
+
+            const sketch_pad = new SketchPad(input_container, constants.CANVAS_SIZE, 
+            /*on_redraw=*/(paths)=>{
+                const extraction = features_function.active.map(f=>f.function(paths));
+                const classification_text = classify(extraction);
+                classification.innerHTML = "Is it a " + classification_text + "?";
+                chart.drawPoint(extraction);
+            });
+
+            function classify(extraction){
+                // Get all the features data
+                const metadata_feature_points = metadatas.map((metadata) => metadata.features);
+                const index = utils.getNearestPoint(extraction, metadata_feature_points);
+                return metadatas[index].drawing;
+            }
         </script>
     </body>

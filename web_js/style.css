@@ -52,3 +52,18 @@ button:disabled:hover{
     margin: 10px;
     overflow: hidden;
 }
+
+#input_container{
+    position: fixed;
+    right: 500px;
+    top: 50%;
+    transform: translate(0,-50%);
+    text-align: center;
+    margin: 10px;
+}
+
+#classification{
+    font-size: 30px;
+    color: black;
+    position: relative;
+}
