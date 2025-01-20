@@ -87,25 +87,10 @@
                 // Get all the features data
                 const metadata_feature_points = metadatas.map((metadata) => metadata.features);
                 const k = 7;
-                const indexes = utils.getKNearestPoint(extraction, metadata_feature_points, k);
+                const indices = utils.getKNearestPoint(extraction, metadata_feature_points, k);
                 // return the most frequently occuring drawing.
-                const occurences = {"":0};
-                let return_drawing = "";
-                for (let i = 0; i < indexes.length; i++){
-                    const index = indexes[i];
-                    const drawing = metadatas[index].drawing;
-                    if (occurences[drawing] === undefined){
-                        occurences[drawing] = 1;
-                    } else {
-                        occurences[drawing]++;
-                    }
-                    if (occurences[drawing] > occurences[return_drawing]){
-                        return_drawing = drawing;
-                    }
-                }
-
-                console.log(occurences);
-                return return_drawing;
+                const predict = utils.getMostFrequent(indices);
+                return metadatas[predict].drawing;
             }
         </script>
     </body>

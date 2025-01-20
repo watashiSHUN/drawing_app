@@ -47,6 +47,23 @@ utils.getKNearestPoint = (coordinate, points, k = 1) => {
   // but only works on numbers, not tuples of numbers
 };
 
+utils.getMostFrequent = (array) => {
+  const counts = {};
+  for (let element of array) {
+    counts[element] = counts[element] || 0;
+    counts[element]++;
+  }
+  let max_count = 0;
+  let max_element = null;
+  for (let element in counts) {
+    if (counts[element] > max_count) {
+      max_count = counts[element];
+      max_element = element;
+    }
+  }
+  return max_element;
+};
+
 if (typeof module !== "undefined") {
   module.exports = utils;
 }
