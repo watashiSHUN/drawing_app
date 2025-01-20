@@ -67,3 +67,7 @@ button:disabled:hover{
     color: black;
     position: relative;
 }
+
+.highlight{
+    background-color: yellow;
+}

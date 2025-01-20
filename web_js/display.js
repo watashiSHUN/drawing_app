@@ -1,24 +1,46 @@
 // Append one row to the table
-function createRow(table, first_column_value, array) {
+function createRow(table, dictionary, key) {
+  // Does not create a new row if it already exists
+  if (document.getElementById(`row_${key}`)) {
+    return;
+  }
   const row = document.createElement("div");
+  row.id = `row_${key}`;
   row.classList.add("row"); // class attributes, for CSS styling
   table.appendChild(row);
 
   // first column
   const first_col = document.createElement("div");
-  first_col.innerHTML = first_column_value; // student name
+  first_col.innerHTML = dictionary[key][0].student_name;
   first_col.classList.add("first_col");
   row.appendChild(first_col);
 
   // the rest of the columns
-  for (let elem of array) {
+  for (let elem of dictionary[key]) {
     const { id, drawing } = elem;
-    const image_container = CreateImage(id, drawing);
+    const image_container = createImage(id, drawing);
     row.appendChild(image_container);
   }
 }
 
-function CreateImage(id, title) {
+function unHighLight(table) {
+  for (let col of table.firstChild.childNodes) {
+    col.classList.remove("highlight");
+  }
+}
+
+function highLight(table, row_id, image_id) {
+  const row = document.getElementById(`row_${row_id}`);
+  // Move the row to the top
+  table.removeChild(row);
+  table.prepend(row);
+
+  // Add style to the image
+  const image = document.getElementById(`image_container_${image_id}`);
+  image.classList.add("highlight");
+}
+
+function createImage(id, title) {
   const image_container = document.createElement("div");
   // Styling, wrap all images in a white background
   image_container.classList.add("image_container");

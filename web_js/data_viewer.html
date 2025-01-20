@@ -43,9 +43,7 @@
             
             let row_count = 0;
             for (let student_id in student_drawings){
-                const drawing_metadatas = student_drawings[student_id];
-                const student_name = drawing_metadatas[0].student_name;
-                createRow(/*div=*/container, student_name, drawing_metadatas);
+                createRow(/*div=*/container, student_drawings, student_id);
                 row_count++;
                 if (row_count >= 50){
                     break;
@@ -76,14 +74,14 @@
             // TODO: multiple clicks triggers error: 
             // https://i.sstatic.net/gwbTlEmI.png
             /*on_click=*/(selected_drawing_metadata)=>{
-                const image_container = CreateImage(selected_drawing_metadata.id, 
-                selected_drawing_metadata.drawing);
-                const existing = selected_image_container.lastChild;
-                if (existing){
-                    selected_image_container.replaceChild(image_container, existing);
-                } else {
-                    selected_image_container.appendChild(image_container);
-                }
+                // Get the student_id from the drawing_metadata, this defines a row
+                const selected_student_id = selected_drawing_metadata.student_id;
+                const selected_image_id = selected_drawing_metadata.id;
+                
+                // unhighlight the previous row
+                unHighLight(container);
+                createRow(container, student_drawings, selected_student_id);
+                highLight(container, selected_student_id, selected_image_id);
             });
 
             const sketch_pad = new SketchPad(input_container, constants.CANVAS_SIZE, 
