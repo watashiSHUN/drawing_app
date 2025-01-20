@@ -24,9 +24,9 @@ function createRow(table, dictionary, key) {
 }
 
 function unHighLight(table) {
-  for (let col of table.firstChild.childNodes) {
-    col.classList.remove("highlight");
-  }
+  document.querySelectorAll(".highlight").forEach((element) => {
+    element.classList.remove("highlight");
+  });
 }
 
 function highLight(table, row_id, image_id) {
@@ -38,6 +38,7 @@ function highLight(table, row_id, image_id) {
   // Add style to the image
   const image = document.getElementById(`image_container_${image_id}`);
   image.classList.add("highlight");
+  // image.scrollIntoView({ behavior: "auto", block: "center" });
 }
 
 function createImage(id, title) {

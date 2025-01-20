@@ -54,12 +54,14 @@ button:disabled:hover{
 }
 
 #input_container{
-    position: fixed;
-    right: 500px;
-    top: 50%;
-    transform: translate(0,-50%);
     text-align: center;
     margin: 10px;
+}
+
+#user_interaction{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #classification{

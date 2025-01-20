@@ -7,12 +7,16 @@
     </head>
     <body>
         <h1>Data Viewer</h1>
+        <!-- input_container and chart_container are side by side -->
+        <div id="user_interaction" >
         <div id="input_container">
             <div id="classification"></div>
         </div>
         <div id="chart_container"></div><!--refactor chart to be its own html page -->
-        <div id="selected_image_container"></div>
-        <div id="container"></div> <!--TODO: rename to table_container-->
+        </div>
+
+        <div id="table_container"></div>
+        
         <!-- data -->
         <script src="../data/dataset/js/features.js"></script>
 
@@ -43,7 +47,7 @@
             
             let row_count = 0;
             for (let student_id in student_drawings){
-                createRow(/*div=*/container, student_drawings, student_id);
+                createRow(/*div=*/table_container, student_drawings, student_id);
                 row_count++;
                 if (row_count >= 50){
                     break;
@@ -61,7 +65,7 @@
                 };
 
             const options = {
-                size: constants.CANVAS_SIZE*3,
+                size: constants.CANVAS_SIZE*1.5,
                 axesLabels: feature_names,
                 styles: style,
                 transparency: 0.6,
@@ -71,17 +75,21 @@
             // graphics.generateImages(style);
 
             const chart = new Chart(chart_container, metadatas, options, 
-            // TODO: multiple clicks triggers error: 
-            // https://i.sstatic.net/gwbTlEmI.png
             /*on_click=*/(selected_drawing_metadata)=>{
+                // unhighlight the previous row
+                unHighLight(table_container);
+
+                if (selected_drawing_metadata == null){
+                    // When we clicked an empty space
+                    return;
+                }
                 // Get the student_id from the drawing_metadata, this defines a row
                 const selected_student_id = selected_drawing_metadata.student_id;
                 const selected_image_id = selected_drawing_metadata.id;
                 
-                // unhighlight the previous row
-                unHighLight(container);
-                createRow(container, student_drawings, selected_student_id);
-                highLight(container, selected_student_id, selected_image_id);
+
+                createRow(table_container, student_drawings, selected_student_id);
+                highLight(table_container, selected_student_id, selected_image_id);
             });
 
             const sketch_pad = new SketchPad(input_container, constants.CANVAS_SIZE, 
