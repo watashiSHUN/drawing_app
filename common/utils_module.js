@@ -43,7 +43,7 @@ utils.getKNearestPoint = (coordinate, points, k = 1) => {
   });
   processed_points.sort((a, b) => a.distance - b.distance);
   return processed_points.slice(0, k).map((point) => point.index);
-  // NOTE: Math.min(...array) will return the minimum valu
+  // NOTE: Math.min(...array) will return the minimum value
   // but only works on numbers, not tuples of numbers
 };
 
