@@ -33,20 +33,16 @@ utils.distance2D = (a, b) => {
   return Math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2);
 };
 
+// Return k nearest points
 // Iterate over all points and compute their distance to the given point
 // OUTPUT: return the INDEX of the nearest point in points
-utils.getNearestPoint = (coordinate, points) => {
-  let min_distance = Infinity;
-  let nearest_index = 0;
-  points.forEach((point, index) => {
-    const distance = utils.distance2D(coordinate, point);
-    if (distance < min_distance) {
-      min_distance = distance;
-      nearest_index = index;
-    }
+utils.getKNearestPoint = (coordinate, points, k = 1) => {
+  // TODO: use heap instead of sorting
+  const processed_points = points.map((point, index) => {
+    return { index: index, distance: utils.distance2D(coordinate, point) };
   });
-  return nearest_index;
-
+  processed_points.sort((a, b) => a.distance - b.distance);
+  return processed_points.slice(0, k).map((point) => point.index);
   // NOTE: Math.min(...array) will return the minimum valu
   // but only works on numbers, not tuples of numbers
 };
