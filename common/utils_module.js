@@ -29,8 +29,10 @@ utils.jsonToVariable = (json_object, varaible_name) => {
   return `const ${varaible_name} = ${JSON.stringify(json_object)};`;
 };
 
-utils.distance2D = (a, b) => {
-  return Math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2);
+utils.euclideanDistance = (a, b) => {
+  return Math.sqrt(
+    a.reduce((acc, val, index) => acc + (val - b[index]) ** 2, 0)
+  );
 };
 
 // Return k nearest points
@@ -39,7 +41,10 @@ utils.distance2D = (a, b) => {
 utils.getKNearestPoint = (coordinate, points, k = 1) => {
   // TODO: use heap instead of sorting
   const processed_points = points.map((point, index) => {
-    return { index: index, distance: utils.distance2D(coordinate, point) };
+    return {
+      index: index,
+      distance: utils.euclideanDistance(coordinate, point),
+    };
   });
   processed_points.sort((a, b) => a.distance - b.distance);
   return processed_points.slice(0, k).map((point) => point.index);
