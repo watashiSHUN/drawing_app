@@ -95,19 +95,20 @@
             const sketch_pad = new SketchPad(input_container, constants.CANVAS_SIZE, 
             /*on_redraw=*/(paths)=>{
                 const extraction = features_function.active.map(f=>f.function(paths));
-                const classification_text = classify(extraction);
-                classification.innerHTML = "Is it a " + classification_text + "?";
-                chart.drawPoint(extraction);
+                const neighbors = classify(extraction);
+                // Return the most frequently occuring drawing.
+                const predict = utils.getMostFrequent(neighbors);
+                classification.innerHTML = "Is it a " + metadatas[predict].drawing + "?";
+                const neighbor_features = neighbors.map((neighbor) => metadatas[neighbor].features);
+                chart.drawPoint(extraction, neighbor_features, style[metadatas[predict].drawing].text);
             });
 
+            // Return neighbor indices
             function classify(extraction){
                 // Get all the features data
                 const metadata_feature_points = metadatas.map((metadata) => metadata.features);
                 const k = 7;
-                const indices = utils.getKNearestPoint(extraction, metadata_feature_points, k);
-                // return the most frequently occuring drawing.
-                const predict = utils.getMostFrequent(indices);
-                return metadatas[predict].drawing;
+                return utils.getKNearestPoint(extraction, metadata_feature_points, k);
             }
         </script>
     </body>
