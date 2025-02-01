@@ -1,114 +1,136 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Data Viewer</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
-    </head>
-    <body>
-        <h1>Data Viewer</h1>
-        <!-- input_container and chart_container are side by side -->
-        <div id="user_interaction" >
-        <div id="input_container">
-            <div id="classification"></div>
-        </div>
-        <div id="chart_container"></div><!--refactor chart to be its own html page -->
-        </div>
+  <head>
+    <meta charset="utf-8" />
+    <title>Data Viewer</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+  <body>
+    <h1>Data Viewer</h1>
+    <!-- input_container and chart_container are side by side -->
+    <div id="user_interaction">
+      <div id="input_container">
+        <div id="classification"></div>
+      </div>
+      <div id="chart_container"></div>
+      <!--refactor chart to be its own html page -->
+    </div>
 
-        <div id="table_container"></div>
-        
-        <!-- data -->
-        <script src="../data/dataset/js/features.js"></script>
+    <div id="table_container"></div>
 
-        <!-- common code -->
-        <script src="../common/constants_module.js"></script>
-        <script src="../common/utils_module.js"></script>
-        <script src="../common/draw_module.js"></script>
-        <script src="../common/features_module.js"></script>
+    <!-- data -->
+    <script src="../data/dataset/js/features.js"></script>
+    <script src="../data/dataset/js/min_max.js"></script>
 
-        <!-- drawing sketchpad(same sketchpad as the one we used in "data_collector.html") -->
-        <script src="sketch_pad.js"></script>
-        
-        <!-- display chart -->
-        <script src="display.js"></script>
-        <script src="../github/chart.js"></script>
-        <script src="../github/graphics.js"></script>
-        <script src="../github/math.js"></script>
-        
-        <!-- if we were to use google chart library:
+    <!-- common code -->
+    <script src="../common/constants_module.js"></script>
+    <script src="../common/utils_module.js"></script>
+    <script src="../common/draw_module.js"></script>
+    <script src="../common/features_module.js"></script>
+
+    <!-- drawing sketchpad(same sketchpad as the one we used in "data_collector.html") -->
+    <script src="sketch_pad.js"></script>
+
+    <!-- display chart -->
+    <script src="display.js"></script>
+    <script src="../github/chart.js"></script>
+    <script src="../github/graphics.js"></script>
+    <script src="../github/math.js"></script>
+
+    <!-- if we were to use google chart library:
         <script src="https://www.gstatic.com/charts/loader.js"></script>
         <script src="display_chart.js"></script> 
         -->
 
-        <script>
-            const {metadatas, feature_names} = features;
-            // NOTE: variable `metadata` is available when we load metadata.js
-            const student_drawings = utils.groupByKey(metadatas, "student_id");
-            
-            let row_count = 0;
-            for (let student_id in student_drawings){
-                createRow(/*div=*/table_container, student_drawings, student_id);
-                row_count++;
-                if (row_count >= 50){
-                    break;
-                }
-            }
-            const style = {
-                    car: {color: "red", text: "🚗"},
-                    fish: {color: "blue", text: "🐟"},
-                    house: {color: "green", text: "🏠"},
-                    tree: {color: "purple", text: "🌳"},
-                    bicycle: {color: "orange", text: "🚴"},
-                    guitar: {color: "brown", text: "🎸"},
-                    pencil: {color: "black", text: "📝"},
-                    clock: {color: "gray", text: "⏰"}
-                };
+    <script>
+      const { metadatas, feature_names } = features;
+      // NOTE: variable `metadata` is available when we load metadata.js
+      const student_drawings = utils.groupByKey(metadatas, "student_id");
 
-            const options = {
-                size: constants.CANVAS_SIZE*1.5,
-                axesLabels: feature_names,
-                styles: style,
-                transparency: 0.6,
-                icon: "text",
-            };
-            // TODO: Add colors makes the page load a lot slower, why?
-            // graphics.generateImages(style);
+      let row_count = 0;
+      for (let student_id in student_drawings) {
+        createRow(/*div=*/ table_container, student_drawings, student_id);
+        row_count++;
+        if (row_count >= 50) {
+          break;
+        }
+      }
+      const style = {
+        car: { color: "red", text: "🚗" },
+        fish: { color: "blue", text: "🐟" },
+        house: { color: "green", text: "🏠" },
+        tree: { color: "purple", text: "🌳" },
+        bicycle: { color: "orange", text: "🚴" },
+        guitar: { color: "brown", text: "🎸" },
+        pencil: { color: "black", text: "📝" },
+        clock: { color: "gray", text: "⏰" },
+      };
 
-            const chart = new Chart(chart_container, metadatas, options, 
-            /*on_click=*/(selected_drawing_metadata)=>{
-                // unhighlight the previous row
-                unHighLight(table_container);
+      const options = {
+        size: constants.CANVAS_SIZE * 1.5,
+        axesLabels: feature_names,
+        styles: style,
+        transparency: 0.6,
+        icon: "text",
+      };
+      // TODO: Add colors makes the page load a lot slower, why?
+      // graphics.generateImages(style);
 
-                if (selected_drawing_metadata == null){
-                    // When we clicked an empty space
-                    return;
-                }
-                // Get the student_id from the drawing_metadata, this defines a row
-                const selected_student_id = selected_drawing_metadata.student_id;
-                const selected_image_id = selected_drawing_metadata.id;
-                
+      const chart = new Chart(
+        chart_container,
+        metadatas,
+        options,
+        /*on_click=*/ (selected_drawing_metadata) => {
+          // unhighlight the previous row
+          unHighLight(table_container);
 
-                createRow(table_container, student_drawings, selected_student_id);
-                highLight(table_container, selected_student_id, selected_image_id);
-            });
+          if (selected_drawing_metadata == null) {
+            // When we clicked an empty space
+            return;
+          }
+          // Get the student_id from the drawing_metadata, this defines a row
+          const selected_student_id = selected_drawing_metadata.student_id;
+          const selected_image_id = selected_drawing_metadata.id;
 
-            const sketch_pad = new SketchPad(input_container, constants.CANVAS_SIZE, 
-            /*on_redraw=*/(paths)=>{
-                const extraction = features_function.active.map(f=>f.function(paths));
-                const neighbors = classify(extraction);
-                // Return the most frequently occuring drawing.
-                const predict = utils.getMostFrequent(neighbors);
-                classification.innerHTML = "Is it a " + metadatas[predict].drawing + "?";
-                const neighbor_features = neighbors.map((neighbor) => metadatas[neighbor].features);
-                chart.drawPoint(extraction, neighbor_features, style[metadatas[predict].drawing].text);
-            });
+          createRow(table_container, student_drawings, selected_student_id);
+          highLight(table_container, selected_student_id, selected_image_id);
+        }
+      );
 
-            // Return neighbor indices
-            function classify(extraction){
-                // Get all the features data
-                const metadata_feature_points = metadatas.map((metadata) => metadata.features);
-                const k = 7;
-                return utils.getKNearestPoint(extraction, metadata_feature_points, k);
-            }
-        </script>
-    </body>
+      const sketch_pad = new SketchPad(
+        input_container,
+        constants.CANVAS_SIZE,
+        /*on_redraw=*/ (paths) => {
+          const extraction = features_function.active.map((f) =>
+            f.function(paths)
+          );
+          // put extraction into an array, since we only have features extracted from 1 drawing
+          utils.normalizePoints([extraction], min_max);
+          const neighbors = classify(extraction);
+          // Return the most frequently occuring drawing.
+          const predict = utils.getMostFrequent(neighbors);
+          classification.innerHTML =
+            "Is it a " + metadatas[predict].drawing + "?";
+          const neighbor_features = neighbors.map(
+            (neighbor) => metadatas[neighbor].features
+          );
+          chart.drawPoint(
+            extraction,
+            neighbor_features,
+            style[metadatas[predict].drawing].text
+          );
+        }
+      );
+
+      // Return neighbor indices
+      function classify(extraction) {
+        // Get all the features data
+        const metadata_feature_points = metadatas.map(
+          (metadata) => metadata.features
+        );
+        const k = 7;
+        return utils.getKNearestPoint(extraction, metadata_feature_points, k);
+      }
+    </script>
+  </body>
+</html>

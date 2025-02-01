@@ -71,38 +71,46 @@ utils.getMostFrequent = (array) => {
 
 // INPUT: [[feature1, feature2, ...], [feature1, feature2, ...], ...]
 // Normalize points to be in the range [0, 1] (between min->max)
-// OUTPUT: change inplace
-utils.normalizePoints = (points) => {
+// OUTPUT: normalize points in place also return [{min, max}, ...] for each feature
+utils.normalizePoints = (points, min_max) => {
   // Create an array of min_max object for each feature [{min, max}, ...]
   // Get min, max for each dimension
-  min_max = [];
-  points.forEach((features, index) => {
-    if (index == 0) {
-      min_max = features.map((value) => {
-        return { min: value, max: value };
+  if (min_max == undefined) {
+    // NOTE: we cannot hardcode min_max, what if points are paths count and dot count?
+    min_max = [];
+    points.forEach((features, index) => {
+      if (index == 0) {
+        min_max = features.map((value) => {
+          return { min: value, max: value };
+        });
+      }
+      features.forEach((value, index) => {
+        min_max[index].min = Math.min(min_max[index].min, value);
+        min_max[index].max = Math.max(min_max[index].max, value);
       });
-    }
-    features.forEach((value, index) => {
-      min_max[index].min = Math.min(min_max[index].min, value);
-      min_max[index].max = Math.max(min_max[index].max, value);
     });
-  });
+  }
 
   points.forEach((features) => {
     features.forEach((value, index) => {
       const min = min_max[index].min;
       const max = min_max[index].max;
       // Linear interpolate (lerp)
+      // TODO(shunxian): what if max == min? => divide by zero exception
       features[index] = (value - min) / (max - min);
     });
   });
+
+  return min_max;
 };
 
 if (typeof module !== "undefined") {
   module.exports = utils;
 }
 
-if (require.main == module) {
+// Note: we cannot do `require != undefined`, because interpreter will still need to evaluate what is `require`
+// use typeof xyz !== "undefined" instead
+if (typeof module !== "undefined" && require.main == module) {
   input = [
     [1, 300],
     [100, 20],

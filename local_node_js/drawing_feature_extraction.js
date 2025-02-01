@@ -23,7 +23,7 @@ for (let i = 0; i < metadatas.length; i++) {
 
 // Normalize feature values to be in the range [0, 1]
 // Change in place
-utils.normalizePoints(metadatas.map((m) => m.features));
+const min_max = utils.normalizePoints(metadatas.map((m) => m.features));
 
 // Avoid repeating keys, store the key names only once, outside the for loop.
 const feature_names = features_function.active.map((f) => f.name);
@@ -37,4 +37,9 @@ fs.writeFileSync(
 fs.writeFileSync(
   constants.JS_DIR + "/features.js",
   utils.jsonToVariable({ feature_names, metadatas }, "features")
+);
+
+fs.writeFileSync(
+  constants.JS_DIR + "/min_max.js",
+  utils.jsonToVariable(min_max, "min_max")
 );

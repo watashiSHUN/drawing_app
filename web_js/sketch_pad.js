@@ -77,6 +77,10 @@ class SketchPad {
   }
 
   #redraw() {
+    if (this.path.length == 0) {
+      return;
+    }
+
     // Imported via <script> tag in html
     drawPath(this.ctx, this.path);
     if (this.on_redraw) {
