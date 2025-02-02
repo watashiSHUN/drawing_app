@@ -35,11 +35,14 @@ utils.euclideanDistance = (a, b) => {
   );
 };
 
+// TODO, optimize
+// 1. the data set is fixed, can we pre sort them? potential catch, its euclidean distance?
+// 2. use heap to find closest k points will for sure be faster
+
 // Return k nearest points
 // Iterate over all points and compute their distance to the given point
-// OUTPUT: return the INDEX of the nearest point in points
+// OUTPUT: return the INDICES of the nearest points (K>1)
 utils.getKNearestPoint = (coordinate, points, k = 1) => {
-  // TODO: use heap instead of sorting
   const processed_points = points.map((point, index) => {
     return {
       index: index,
@@ -109,6 +112,7 @@ if (typeof module !== "undefined") {
 }
 
 // Note: we cannot do `require != undefined`, because interpreter will still need to evaluate what is `require`
+// it only works when a variable is declared but not defined, e.g. `var a;`  or MISSING PROPERTY, MISSING FUNCTION PARAM
 // use typeof xyz !== "undefined" instead
 if (typeof module !== "undefined" && require.main == module) {
   input = [
