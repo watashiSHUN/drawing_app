@@ -21,7 +21,6 @@
     <!-- data -->
     <script src="../data/dataset/js/features.js"></script>
     <script src="../data/dataset/js/min_max.js"></script>
-    <script src="../data/dataset/js/testing_data.js"></script>
 
     <!-- common code -->
     <script src="../common/constants_module.js"></script>
@@ -108,19 +107,18 @@
           // put extraction into an array, since we only have features extracted from 1 drawing
           utils.normalizePoints([extraction], min_max);
           const neighbors = classify(extraction, 7);
+          // parse index to drawing string
+          const neighbors_drawing = neighbors.map(
+            (neighbor) => metadatas[neighbor].drawing
+          );
           // Return the most frequently occuring drawing.
-          const predict = utils.getMostFrequent(neighbors);
-          classification.innerHTML =
-            "Is it a " + metadatas[predict].drawing + "?";
+          const predict = utils.getMostFrequent(neighbors_drawing);
+          classification.innerHTML = "Is it a " + predict + "?";
           const neighbor_features = neighbors.map(
             (neighbor) => metadatas[neighbor].features
           );
           // Draw `extraction` on the chart, and link it with its `neighbors`.
-          chart.drawPoint(
-            extraction,
-            neighbor_features,
-            style[metadatas[predict].drawing].text
-          );
+          chart.drawPoint(extraction, neighbor_features, style[predict].text);
         }
       );
 
@@ -132,27 +130,6 @@
         );
         return utils.getKNearestPoint(extraction, metadata_feature_points, k);
       }
-
-      // Model evaluation
-      let correct_count = 0;
-      let error_count = 0;
-
-      testing_data.forEach((data) => {
-        // expected result
-        const expected = data.drawing;
-        const neighbors = classify(data.features, 7);
-        // Return the most frequently occuring drawing.
-        const predict = utils.getMostFrequent(neighbors);
-        if (metadatas[predict].drawing == expected) {
-          correct_count++;
-        } else {
-          error_count++;
-        }
-      });
-
-      console.log(
-        "correctness rate: " + correct_count / (correct_count + error_count)
-      );
     </script>
   </body>
 </html>
