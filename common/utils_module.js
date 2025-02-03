@@ -41,7 +41,8 @@ utils.euclideanDistance = (a, b) => {
 
 // Return k nearest points
 // Iterate over all points and compute their distance to the given point
-// OUTPUT: return the INDICES of the nearest points (K>1)
+// INPUT: coordinate(x,y), points[[x1,y1],[x2,y2],...], k
+// OUTPUT: return the INDICES of the nearest points (K>1) in the input array
 utils.getKNearestPoint = (coordinate, points, k = 1) => {
   const processed_points = points.map((point, index) => {
     return {

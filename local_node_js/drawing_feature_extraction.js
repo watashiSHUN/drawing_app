@@ -8,7 +8,7 @@ const fs = require("fs");
 // OUTPUT: metadata for each drawing + features
 
 // Filter outliers: img/3106.png
-let metadatas = JSON.parse(fs.readFileSync(constants.METADATA_FILE)).filter(
+const metadatas = JSON.parse(fs.readFileSync(constants.METADATA_FILE)).filter(
   (m) => m.id != 3106
 );
 
@@ -35,22 +35,62 @@ const min_max = utils.normalizePoints(metadatas.map((m) => m.features));
 // Separate training and testing data
 const training_data = metadatas.filter((m, index) => index % 2 == 0);
 const testing_data = metadatas.filter((m, index) => index % 2 == 1);
-metadatas = training_data; // Override
 
 // Avoid repeating keys, store the key names only once, outside the for loop.
 const feature_names = features_function.active.map((f) => f.name);
 
 // Output is 2 arrays
+// TODO(shunxian): what are these used for?
 // fs.writeFileSync(
 //   constants.JSON_DIR + "/features.json",
 //   JSON.stringify({ feature_names, metadatas })
 // );
 
+// NOTE result: https://i.sstatic.net/JPKCSl2C.png
+for (let k = 1; k < 10; k++) {
+  // Model evaluation
+  let correct_count = 0;
+  let error_count = 0;
+
+  for (let i = 0; i < testing_data.length; i++) {
+    let data = testing_data[i];
+    // expected result
+    const expected = data.drawing;
+    const neighbors = utils.getKNearestPoint(
+      data.features,
+      training_data.map((m) => m.features),
+      k
+    );
+    const neighbor_drawings = neighbors.map(
+      (index) => training_data[index].drawing
+    );
+    // Return the most frequently occuring drawing.
+    const predict = utils.getMostFrequent(neighbor_drawings);
+    if (predict == expected) {
+      correct_count++;
+    } else {
+      error_count++;
+    }
+    utils.printProgress(i + 1, testing_data.length);
+  }
+  console.log(
+    `correctness rate for k=${k}:  ${
+      correct_count / (correct_count + error_count)
+    }`
+  );
+}
+
 console.log("Saving files...");
-console.log("training_data", training_data.length);
+console.log("metadata", metadatas.length);
 fs.writeFileSync(
   constants.JS_DIR + "/features.js",
   utils.jsonToVariable({ feature_names, metadatas }, "features")
+);
+
+console.log("training_data", training_data.length);
+fs.writeFileSync(
+  constants.JS_DIR + "/training_data.js",
+  utils.jsonToVariable(training_data, "training_data")
 );
 
 console.log("testing_data", testing_data.length);
