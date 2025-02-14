@@ -39,51 +39,15 @@ const testing_data = metadatas.filter((m, index) => index % 2 == 1);
 // Avoid repeating keys, store the key names only once, outside the for loop.
 const feature_names = features_function.active.map((f) => f.name);
 
-// Output is 2 arrays
-// TODO(shunxian): what are these used for?
-// fs.writeFileSync(
-//   constants.JSON_DIR + "/features.json",
-//   JSON.stringify({ feature_names, metadatas })
-// );
-
-// NOTE result: https://i.sstatic.net/JPKCSl2C.png
-
-const training_data_feature_extraction = training_data.map((m) => m.features);
-
-for (let k = 1; k <= 20; k++) {
-  // Model evaluation
-  let correct_count = 0;
-  let error_count = 0;
-
-  for (let i = 0; i < testing_data.length; i++) {
-    let data = testing_data[i];
-    // expected result
-    const expected = data.drawing;
-    const k_nearest_neighbors = utils.getKNearestPoint(
-      data.features,
-      training_data_feature_extraction,
-      k
-    );
-    const k_nearest_neighbor_drawings = k_nearest_neighbors.map(
-      (index) => training_data[index].drawing
-    );
-    // Return the most frequently occuring drawing.
-    const predict = utils.getMostFrequent(k_nearest_neighbor_drawings);
-    if (predict == expected) {
-      correct_count++;
-    } else {
-      error_count++;
-    }
-    utils.printProgress(i + 1, testing_data.length);
-  }
-  console.log(
-    `correctness rate for k=${k}:  ${
-      correct_count / (correct_count + error_count)
-    }`
-  );
-}
-
 console.log("Saving files...");
+
+// .json is used for local node
+fs.writeFileSync(
+  constants.JSON_DIR + "/features.json",
+  JSON.stringify({ feature_names, metadatas })
+);
+
+// .js is used for web app
 console.log("metadata", metadatas.length);
 fs.writeFileSync(
   constants.JS_DIR + "/features.js",
@@ -92,11 +56,19 @@ fs.writeFileSync(
 
 console.log("training_data", training_data.length);
 fs.writeFileSync(
+  constants.JSON_DIR + "/training_data.json",
+  JSON.stringify(training_data)
+);
+fs.writeFileSync(
   constants.JS_DIR + "/training_data.js",
   utils.jsonToVariable(training_data, "training_data")
 );
 
 console.log("testing_data", testing_data.length);
+fs.writeFileSync(
+  constants.JSON_DIR + "/testing_data.json",
+  JSON.stringify(testing_data)
+);
 fs.writeFileSync(
   constants.JS_DIR + "/testing_data.js",
   utils.jsonToVariable(testing_data, "testing_data")

@@ -37,6 +37,9 @@
     <script src="../github/graphics.js"></script>
     <script src="../github/math.js"></script>
 
+    <!-- classification model -->
+    <script src="../common/classifiers/knn.js"></script>
+
     <!-- if we were to use google chart library:
         <script src="https://www.gstatic.com/charts/loader.js"></script>
         <script src="display_chart.js"></script> 
@@ -97,6 +100,14 @@
         }
       );
 
+      const kNN_model = new KNN(
+        metadatas,
+        (metadata) => metadata.features,
+        (metadata) => metadata.drawing,
+        constants.KNN_K
+      );
+
+      // TODO(shunxian): the last UNDO hangs the page.
       const sketch_pad = new SketchPad(
         input_container,
         constants.CANVAS_SIZE,
@@ -106,30 +117,20 @@
           );
           // put extraction into an array, since we only have features extracted from 1 drawing
           utils.normalizePoints([extraction], min_max);
-          const neighbors = classify(extraction, constatns.KNN);
-          // parse index to drawing string
-          const neighbors_drawing = neighbors.map(
-            (neighbor) => metadatas[neighbor].drawing
-          );
-          // Return the most frequently occuring drawing.
-          const predict = utils.getMostFrequent(neighbors_drawing);
-          classification.innerHTML = "Is it a " + predict + "?";
-          const neighbor_features = neighbors.map(
+          const { predict_result, k_nearest_neighbors_indices } =
+            kNN_model.predict(extraction);
+          classification.innerHTML = "Is it a " + predict_result + "?";
+          const neighbor_features = k_nearest_neighbors_indices.map(
             (neighbor) => metadatas[neighbor].features
           );
           // Draw `extraction` on the chart, and link it with its `neighbors`.
-          chart.drawPoint(extraction, neighbor_features, style[predict].text);
+          chart.drawPoint(
+            extraction,
+            neighbor_features,
+            style[predict_result].text
+          );
         }
       );
-
-      // Return neighbor indices
-      function classify(extraction, k) {
-        // Get all the features data
-        const metadata_feature_points = metadatas.map(
-          (metadata) => metadata.features
-        );
-        return utils.getKNearestPoint(extraction, metadata_feature_points, k);
-      }
     </script>
   </body>
 </html>
