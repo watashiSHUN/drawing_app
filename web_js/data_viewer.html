@@ -106,7 +106,7 @@
           );
           // put extraction into an array, since we only have features extracted from 1 drawing
           utils.normalizePoints([extraction], min_max);
-          const neighbors = classify(extraction, 7);
+          const neighbors = classify(extraction, constatns.KNN);
           // parse index to drawing string
           const neighbors_drawing = neighbors.map(
             (neighbor) => metadatas[neighbor].drawing

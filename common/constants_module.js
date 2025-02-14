@@ -12,6 +12,7 @@ constants.METADATA_FILE = constants.JSON_DIR + "/metadata.json";
 
 // Numeric constants
 constants.CANVAS_SIZE = 400;
+constants.KNN = 20;
 
 if (typeof module !== "undefined") {
   module.exports = constants;

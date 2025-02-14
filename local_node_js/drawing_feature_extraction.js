@@ -47,7 +47,10 @@ const feature_names = features_function.active.map((f) => f.name);
 // );
 
 // NOTE result: https://i.sstatic.net/JPKCSl2C.png
-for (let k = 1; k < 10; k++) {
+
+const training_data_feature_extraction = training_data.map((m) => m.features);
+
+for (let k = 1; k <= 20; k++) {
   // Model evaluation
   let correct_count = 0;
   let error_count = 0;
@@ -56,16 +59,16 @@ for (let k = 1; k < 10; k++) {
     let data = testing_data[i];
     // expected result
     const expected = data.drawing;
-    const neighbors = utils.getKNearestPoint(
+    const k_nearest_neighbors = utils.getKNearestPoint(
       data.features,
-      training_data.map((m) => m.features),
+      training_data_feature_extraction,
       k
     );
-    const neighbor_drawings = neighbors.map(
+    const k_nearest_neighbor_drawings = k_nearest_neighbors.map(
       (index) => training_data[index].drawing
     );
     // Return the most frequently occuring drawing.
-    const predict = utils.getMostFrequent(neighbor_drawings);
+    const predict = utils.getMostFrequent(k_nearest_neighbor_drawings);
     if (predict == expected) {
       correct_count++;
     } else {
