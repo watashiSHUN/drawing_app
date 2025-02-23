@@ -3,6 +3,7 @@ const utils = require("../common/utils_module.js");
 
 // Different classifiers (models)
 const KNN = require("../common/classifiers/knn.js");
+const MLP = require("../common/classifiers/mlp.js");
 
 const fs = require("fs");
 
@@ -12,8 +13,43 @@ const testing_data = JSON.parse(fs.readFileSync(constants.TESTING_DATA));
 const feature_extractor = (data) => data.features;
 const result_extractor = (data) => data.drawing;
 
+const classification = [
+  "car",
+  "fish",
+  "house",
+  "tree",
+  "bicycle",
+  "guitar",
+  "pencil",
+  "clock",
+];
+
+const mLP_model = new MLP(
+  /*neurons_per_level=*/ [
+    training_data[0].features.length,
+    10,
+    classification.length,
+  ],
+  /*output_array=*/ classification
+);
+
+let correct_count = 0;
+let total_count = 0;
+
+for (let i = 0; i < testing_data.length; i++) {
+  let data = testing_data[i];
+  // expected result
+  const expected = data.drawing;
+  const { predict_result: actual } = mLP_model.predict(data.features);
+
+  correct_count += actual == expected ? 1 : 0;
+  total_count++;
+  utils.printProgress(i + 1, testing_data.length);
+}
+console.log(`MLP correctness rate:  ${correct_count / total_count}`);
+
 // NOTE result: https://i.sstatic.net/JPKCSl2C.png
-// NOTE, pure guessing is 1/8 => 0.125
+// NOTE pure guessing is 1/8 => 0.125
 // kNN with k = 50 -> 0.5
 for (let k = 1; k <= 50; k++) {
   const kNN_model = new KNN(
@@ -36,5 +72,7 @@ for (let k = 1; k <= 50; k++) {
     total_count++;
     utils.printProgress(i + 1, testing_data.length);
   }
-  console.log(`correctness rate for k=${k}:  ${correct_count / total_count}`);
+  console.log(
+    `KNN correctness rate for k=${k}:  ${correct_count / total_count}`
+  );
 }

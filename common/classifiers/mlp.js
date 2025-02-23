@@ -1,10 +1,39 @@
 // Multi-layer perceptron
-// class MLP {}
+class MLP {
+  // last_layer_output = ["pencil", "car", "guitar"]
+  constructor(neurons_per_level, output) {
+    this.neurons_per_level = neurons_per_level;
+    this.network = new NeuralNetwork(neurons_per_level);
+    this.output = output;
+  }
+  // data = [[[x,y], [x,y], [x,y]],[[x,y], [x,y], [x,y]]]
+  // Each input is a stroke, connect dots in order.
+  // NOTE:
+  // 1. self-driving car, input layer corresponds to the sensor count
+
+  // 2. classification, input layer corresponds to the feature count
+  // f(input) => feature array
+  // TODO(shunxian): is there a way for us to not pick the features?
+
+  // 1. layer length = number of stroke, input = number of points?
+  // NO, stroke order will affect the model
+
+  // 2. use pixel => resize it to 100/100, 10000 input, each dot is 0/1 or grey scale.
+  // convert variable length input to fixed length neural network input layer
+  // TODO(shunxian): probably works with KNN too.
+  predict(data) {
+    let last_layer = this.network.feedForward(data);
+    // Get the index of the max value
+    let max_index = last_layer.indexOf(Math.max(...last_layer));
+    return { predict_result: this.output[max_index] };
+  }
+}
 
 // Sum(a*x1+b*x2+c*x3...) > threshold == 1
 // Plane equation
 class NeuralNetwork {
-  //  [5,4,3,2] 5 input, 4 hidden, 3 hidden, 2 output
+  // [5,4,3,2] 5 input, 4 hidden, 3 hidden, 2 output
+  // NOTE: unlike KNN, this model does not store samples, all the knowledge is encrypted in the model
   constructor(neurons_per_level) {
     // At least 1 level
     if (neurons_per_level.length < 2) {
@@ -68,9 +97,13 @@ class Level {
         output_values[j] += outputs_from_single_input[j];
       }
     }
-    return output_values.map((x, index) =>
-      x > this.output_biases[index] ? 1 : 0
-    );
+    // NOTE:
+    // 1. for self-driving car, output could be multiple button pressed (top left)
+    // 2. for classification, we need to compare all numeric values to determine the output (which one is most likely)
+    // return output_values.map((x, index) =>
+    //   x > this.output_biases[index] ? 1 : 0
+    // );
+    return output_values;
   }
 }
 
@@ -100,4 +133,8 @@ if (require.main === module) {
   let nn = new NeuralNetwork([3, 4, 2]);
   nn.feedForward([0, 0, 0]); // expect output [0,0]
   nn.feedForward([0.1, 0.22, 0.333]);
+}
+
+if (typeof module !== "undefined") {
+  module.exports = MLP;
 }

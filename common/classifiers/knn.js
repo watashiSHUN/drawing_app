@@ -13,6 +13,11 @@ class KNN {
     this.k = k;
   }
 
+  // Output:
+  // {
+  // predict_result: "circle",
+  // k_nearest_neighbors_indices: [1, 2, 3, 4, 5]
+  // }
   predict(data) {
     // Return the indices of the k nearest neighbor in training_data
     const k_nearest_neighbors_indices = utils.getKNearestPoint(
