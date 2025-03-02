@@ -1,3 +1,11 @@
+let debugging = false;
+
+function debugLog(msg) {
+  if (debugging) {
+    console.log(msg);
+  }
+}
+
 // Multi-layer perceptron
 class MLP {
   // last_layer_output = ["pencil", "car", "guitar"]
@@ -57,10 +65,10 @@ class NeuralNetwork {
     let outputs = inputs;
     // NOTE, we need to iterate through all levels
     for (let i = 0; i < this.levels.length; i++) {
-      console.log(`Level [${i}]->[${i + 1}] input: ${outputs}`);
+      debugLog(`Level [${i}]->[${i + 1}] input: ${outputs}`);
       outputs = this.levels[i].feedForward(outputs);
     }
-    console.log(`Final output: ${outputs}`);
+    debugLog(`Final output: ${outputs}`);
     return outputs;
   }
 }
@@ -118,7 +126,7 @@ class Node {
     for (let i = 0; i < this.neighbors.length; i++) {
       this.neighbors[i] = Math.random();
     }
-    console.log(
+    debugLog(
       `node[${this.row}][${this.column}] edge values: ${this.neighbors}`
     );
   }
@@ -129,6 +137,7 @@ class Node {
 
 // Unit test
 if (require.main === module) {
+  debugging = true;
   // if the current module is the main entry point of the program.
   let nn = new NeuralNetwork([3, 4, 2]);
   nn.feedForward([0, 0, 0]); // expect output [0,0]
