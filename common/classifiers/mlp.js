@@ -35,6 +35,42 @@ class MLP {
     let max_index = last_layer.indexOf(Math.max(...last_layer));
     return { predict_result: this.output[max_index] };
   }
+
+  evaluate = function (training_data) {
+    let correct_count = 0;
+    let total_count = 0;
+    for (let i = 0; i < training_data.length; i++) {
+      let data = training_data[i];
+      // expected result
+      const expected = data.drawing;
+      const { predict_result: actual } = this.predict(data.features);
+
+      correct_count += actual == expected ? 1 : 0;
+      total_count++;
+      utils.printProgress(i + 1, training_data.length);
+    }
+    return correct_count / training_data.length;
+  };
+
+  // Update the weights and biases based on the input
+  // INPUT: training_data = [[data, expected_output]...], tries = 1000
+  // randomly initialize 1000 networks, pick the one that performs the best on training data
+  // OUTPUT: update this.network to be the best network
+  fit(training_data, tries = 1000) {
+    // placeholder for best network, `this.network` will be changing during the fit()
+    let best_network;
+    let best_accuracy = 0; // always return false result
+    for (let i = 0; i < tries; i++) {
+      this.network = new NeuralNetwork(this.neurons_per_level);
+      let accuracy = this.evaluate(training_data);
+      if (accuracy >= best_accuracy) {
+        best_accuracy = accuracy;
+        best_network = this.network;
+      }
+    }
+    this.network = best_network;
+    console.log(`Best accuracy: ${best_accuracy}`);
+  }
 }
 
 // Sum(a*x1+b*x2+c*x3...) > threshold == 1
